@@ -3,10 +3,10 @@ WORKDIR /app
 
 RUN \
   apt-get update && \
-  apt-get install -y ruby
+  apt-get install -y ruby ruby-dev build-essential
 
 RUN gem install bundler
 COPY Gemfile* /app
-RUN bundle install --without development test
+RUN bundle install
 
 COPY . /app

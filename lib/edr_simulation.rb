@@ -134,7 +134,7 @@ class EdrSimulation
   def add_log(type, log)
     @logs[type] << {
       timestamp: Time.now,
-      process_user: Etc.getlogin,
+      process_user: Etc.getlogin || `whoami`.strip,
       process_id: Process.pid,
       process_name: Process.argv0
     }.merge(log)
