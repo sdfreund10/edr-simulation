@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+
+options = {}
+parser = OptionParser.new do |opts|
+  opts.banner = 'Usage: simulate [options]'
+
+  opts.on('--create_file_location [DIRECTORY]', 'directory in which to simulate file creation') do |location|
+    options[:create_file_location] = location
+  end
+
+  opts.on('--create_file_extension [EXTENSION]', 'which extension to use in create file simulation') do |ext|
+    options[:create_file_extension] = ext
+  end
+
+  opts.on('--modify_file_location [FILE_PATH]', 'file to edit during modify file simulation') do |loc|
+    options[:modify_file_location] = loc
+  end
+
+  opts.on('--delete_file_location [FILE_PATH]', 'file to delete during file deletion simulation') do |loc|
+    options[:delete_file_location] = loc
+  end
+
+  opts.on(
+    '--executable [EXECUTEABLE]',
+    'executable to run during executable simulation. CAUTION: RUNS ON YOUR FILE SYSTEM AND IS POTENTIALLY DESTRUCTIVE'
+  ) do |executable|
+    options[:executable] = executable
+  end
+
+  opts.on('--executable_args arg1,arg2', Array,
+          'comma-separated list of args passed to executable. Invalid without --executable option') do |args|
+    if options[:executable].nil?
+      puts 'INVALID: Provided --executable_args without --executable'
+      exit 1
+    end
+    options[:executable_args] = args
+  end
+
+  opts.on('-h', '--help', 'Prints this help') do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+
+path = File.expand_path(File.dirname(File.dirname(__FILE__)))
+require "#{path}/lib/edr_simulation"
+
+simulation = EdrSimulation.new
+
+puts "Starting Simulation ##{simulation.simulation_id}"
+puts simulation.run(options)
+puts "View results in #{simulation.logfile}"

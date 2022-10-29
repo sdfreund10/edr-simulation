@@ -97,7 +97,7 @@ RSpec.describe EdrSimulation do
   describe 'run_executable' do
     it 'runs excutable' do
       output_file_path = File.join(EdrSimulation::ROOT_PATH, 'spec', 'tmp', 'run_executable_output.txt')
-      EdrSimulation.new.run_executable('touch', [output_file_path])
+      EdrSimulation.new.run_executable(executable: 'touch', args: [output_file_path])
       expect(File.exist?(output_file_path)).to eq true
     end
 
@@ -106,7 +106,7 @@ RSpec.describe EdrSimulation do
       # NOTE: this will probs break in powershell
       example_script = File.join(EdrSimulation::ROOT_PATH, 'spec', 'fixtures', 'sample_executable.sh')
       example_script_output = File.join(EdrSimulation::ROOT_PATH, 'spec', 'tmp', 'test-output.txt')
-      EdrSimulation.new.run_executable(example_script, [example_script_output])
+      EdrSimulation.new.run_executable(executable: example_script, args: [example_script_output])
       expect(File.exist?(example_script_output)).to eq true
     end
   end
@@ -155,7 +155,7 @@ RSpec.describe EdrSimulation do
     it 'logs executable operations' do
       simulation = EdrSimulation.new
       # delete_file has 2 file operations, create and delete
-      simulation.run_executable('echo', ['howdy'])
+      simulation.run_executable(executable: 'echo', args: ['howdy'])
 
       expect(simulation.logs[:executable_processes].length).to eq 1
       expect(simulation.logs[:executable_processes][0]).to match(
