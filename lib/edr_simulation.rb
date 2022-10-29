@@ -6,7 +6,7 @@ require 'json'
 require 'etc'
 
 class EdrSimulation
-  # set root directory of project
+  # set root directory of project for convenience
   ROOT_PATH = File.expand_path(File.dirname(File.dirname(__FILE__)))
   DEFAULT_FILE_DIRECTORY = File.join(
     ROOT_PATH,
@@ -21,10 +21,11 @@ class EdrSimulation
       file_processes: [],
       network_processes: []
     }
-
+    # Perhaps this should be a timestamp?
     @simulation_id = rand(10_000)
   end
 
+  # creates file in specified location
   def create_file(directory: DEFAULT_FILE_DIRECTORY, extension: nil)
     filename = "simulation-#{@simulation_id}-#{Time.now.to_i}"
     extension ||= 'txt'
@@ -34,6 +35,7 @@ class EdrSimulation
     File.new(location, 'w')
   end
 
+  # opens and writes random string to specified file (or creates new file)
   def modify_file(file = nil)
     file ||= create_file
 
@@ -46,6 +48,7 @@ class EdrSimulation
     file
   end
 
+  # deletes specified file (or creates new file)
   def delete_file(file = nil)
     file ||= create_file
 
@@ -55,6 +58,7 @@ class EdrSimulation
     File.delete(file)
   end
 
+  # Opens connection to example.com and downloads index page
   def download_data
     uri = URI('https://example.com')
     request_start_time = Time.now
@@ -69,7 +73,8 @@ class EdrSimulation
     file
   end
 
-  # VERY DANGEROUS - BE CONFIDENT OF INPUT
+  # runs provided executable in a sub-process
+  # VERY DANGEROUS - BE CAREFUL WITH INPUT
   def run_executable(executable: 'echo', args: [''])
     pid = Process.spawn(executable, *args)
 
